@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">   
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'todo/style.css' %}" />
+    <title>To Do</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="todolist not-done">
+                 <h1>Todos</h1>
+                 <form action="{% url 'add' %}" method="post">
+                    {% csrf_token %}
+                        {{form.text}}
+                        <button id="checkAll" class="btn btn-success">Add to do</button>
+                 </form>
+                    <hr>
+                    <a href="{% url 'delete' %}" class="btn btn-success">Delete Completed</a>
+                    <a href="{% url 'deleteall' %}" class="btn btn-success">Delete all</a>                        
+                    <hr>
+                    <ul id="sortable" class="list-unstyled">
+                        {% for td in todo %}
+                            {% if td.complete == False %}
+                                <li class="ui-state-default">
+                                    <div class="checkbox">
+                                        <label><a href="{% url 'complete' td.id %}">{{td.text}} </a></label>
+                                    </div>
+                                </li>  
+                            {% endif %}                      
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="todolist">
+                 <h1>Already Done</h1>
+                    <ul id="done-items" class="list-unstyled">
+                    {% for td in todo  %}
+                        {% if td.complete == True %}
+                            <li> <a href="{% url 'uncomplete' td.id %}"> {{td.text}} </a></li>
+                        {% endif %}
+                    {% endfor %} 
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>   
+</body>
+</html>
